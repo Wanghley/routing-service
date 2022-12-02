@@ -26,7 +26,6 @@ public class GraphProcessor {
     HashMap<String, HashSet<String>> edges;
 
     public void initialize(FileInputStream file) throws Exception {
-        // TODO: Implement initialize
         points = new HashMap<String, Point>();
         edges = new HashMap<String, HashSet<String>>();
         ArrayList<String> vertices = new ArrayList<String>();
