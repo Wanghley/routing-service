@@ -1,6 +1,11 @@
 import java.security.InvalidAlgorithmParameterException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Scanner;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 
 /**
  * Models a weighted graph of latitude-longitude points
@@ -17,8 +22,35 @@ public class GraphProcessor {
      * @param file a FileInputStream of the .graph file
      * @throws Exception if file not found or error reading
      */
+    HashMap<String, Point> points;
+    HashMap<String, HashSet<String>> edges;
+
     public void initialize(FileInputStream file) throws Exception {
         // TODO: Implement initialize
+        points = new HashMap<String, Point>();
+        edges = new HashMap<String, HashSet<String>>();
+        ArrayList<String> vertices = new ArrayList<String>();
+        try (Scanner input = new Scanner(file)) {
+            double num_vertices = input.nextDouble();
+            double num_edges = input.nextDouble();
+
+            for(int i = 0; i < num_vertices; i++) {
+                String city = input.next();
+                vertices.add(city);
+                double lat = input.nextDouble();
+                double lon = input.nextDouble();
+                Point p = new Point(lat, lon);
+                points.put(city, p);
+            }
+            for (int i = 0; i < num_edges; i++) {
+                int cityIndex1 = input.nextInt();
+                int cityIndex2 = input.nextInt();
+                edges.putIfAbsent(vertices.get(cityIndex1), new HashSet<String>());
+                edges.get(vertices.get(cityIndex1)).add(vertices.get(cityIndex2));
+            }
+        }catch (Exception e) {
+            throw new Exception("Could not read .graph file");
+        }
     }
 
 
@@ -79,6 +111,8 @@ public class GraphProcessor {
         // TODO: Implement route
         return null;
     }
-
-    
+    public static void main(String[] args) throws FileNotFoundException, Exception {
+        GraphProcessor gp = new GraphProcessor();
+        gp.initialize(new FileInputStream("data/simple.graph"));
+    }
 }
