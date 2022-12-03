@@ -1,5 +1,6 @@
 import java.security.InvalidAlgorithmParameterException;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -8,6 +9,7 @@ import java.util.PriorityQueue;
 import java.util.Scanner;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.util.Collections;
 
 /**
  * Models a weighted graph of latitude-longitude points
@@ -152,12 +154,56 @@ public class GraphProcessor {
      * either because start is not connected to end or because start equals end.
      */
     public List<Point> route(Point start, Point end) throws InvalidAlgorithmParameterException {
-        // TODO: Implement route
-        return null;
+        if (start.equals(end)) {
+            throw new InvalidAlgorithmParameterException("Start and end are the same point");
+        }
+        if (!connected(start, end)) {
+            throw new InvalidAlgorithmParameterException("No path between start and end");
+        }
+        ArrayList<Point> path = new ArrayList<Point>();
+        HashMap<Point, Double> distance = new HashMap<Point, Double>();
+        distance.put(start, 0.0);
+        PriorityQueue<Point> vertexQueue = new PriorityQueue<Point>();
+        vertexQueue.add(start);
+        HashMap<Point, Point> previous = new HashMap<Point, Point>();
+
+        while (!vertexQueue.isEmpty()) {
+            Point current = vertexQueue.poll();
+
+            // Visit each edge exiting u
+            if(edgesPoints.get(current) == null) {
+                continue;
+            }
+            for (Point neighbor: edgesPoints.get(current)) {
+                double weight = current.distance(neighbor);
+                double distanceThroughCurrent = distance.get(current) + weight;
+                if (!distance.containsKey(neighbor) || distanceThroughCurrent < distance.get(neighbor)) {
+                    distance.put(neighbor, distanceThroughCurrent);
+                    previous.put(neighbor, current);
+                    vertexQueue.add(neighbor);
+                }
+            }
+        }
+
+        path = getShortestPathTo(end,previous);
+
+        return path;
     }
+
+    public ArrayList<Point> getShortestPathTo(Point target, HashMap<Point, Point> previous){
+        ArrayList<Point> path = new ArrayList<Point>();
+        for (Point vertex = target; vertex != null; vertex = previous.get(vertex))
+            path.add(vertex);
+
+        Collections.reverse(path);
+        return path;
+    }
+
     public static void main(String[] args) throws FileNotFoundException, Exception {
         GraphProcessor gp = new GraphProcessor();
         gp.initialize(new FileInputStream("data/simple.graph"));
         System.out.println(gp.connected(new Point(2.0, -1.0), new Point(-1.0, 1.0)));
+        System.out.println(gp.route(new Point(2, -1), new Point(1, 1)));
+        System.out.println();
     }
 }
