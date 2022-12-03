@@ -23,6 +23,7 @@ public class GraphProcessor {
      * @throws Exception if file not found or error reading
      */
     HashMap<String, Point> points;
+    HashMap<Point, HashSet<Point>> edgesPoints;
     HashMap<String, HashSet<String>> edges;
 
     public void initialize(FileInputStream file) throws Exception {
@@ -46,6 +47,8 @@ public class GraphProcessor {
                 int cityIndex2 = input.nextInt();
                 edges.putIfAbsent(vertices.get(cityIndex1), new HashSet<String>());
                 edges.get(vertices.get(cityIndex1)).add(vertices.get(cityIndex2));
+                edgesPoints.putIfAbsent(points.get(vertices.get(cityIndex1)), new HashSet<Point>());
+                edgesPoints.get(points.get(vertices.get(cityIndex1))).add(points.get(vertices.get(cityIndex2)));
             }
         }catch (Exception e) {
             throw new Exception("Could not read .graph file");
