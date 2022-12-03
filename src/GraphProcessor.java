@@ -190,7 +190,7 @@ public class GraphProcessor {
         return path;
     }
 
-    public ArrayList<Point> getShortestPathTo(Point target, HashMap<Point, Point> previous){
+    private ArrayList<Point> getShortestPathTo(Point target, HashMap<Point, Point> previous){
         ArrayList<Point> path = new ArrayList<Point>();
         for (Point vertex = target; vertex != null; vertex = previous.get(vertex))
             path.add(vertex);
