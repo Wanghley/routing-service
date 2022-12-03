@@ -1,9 +1,7 @@
 import java.security.InvalidAlgorithmParameterException;
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.PriorityQueue;
 import java.util.Scanner;
@@ -75,6 +73,7 @@ public class GraphProcessor {
         }catch (Exception e) {
             throw new Exception("Could not read .graph file");
         }
+        System.out.println();
     }
 
 
@@ -215,11 +214,13 @@ public class GraphProcessor {
         return path;
     }
 
-    public static void main(String[] args) throws FileNotFoundException, Exception {
-        GraphProcessor gp = new GraphProcessor();
-        gp.initialize(new FileInputStream("data/usa.graph"));
-        System.out.println(gp.connected(new Point(2.0, -1.0), new Point(-1.0, 1.0)));
-        System.out.println(gp.route(new Point(2, -1), new Point(1, 1)));
-        System.out.println();
-    }
+    // public static void main(String[] args) throws FileNotFoundException, Exception {
+    //     GraphProcessor gp = new GraphProcessor();
+    //     gp.initialize(new FileInputStream("data/simple.graph"));
+    //     // System.out.println(gp.connected(new Point(2.0, -1.0), new Point(-1.0, 1.0)));
+    //     // System.out.println(gp.route(new Point(47.578813, -122.139773), new Point(47.632292, -122.187898)));
+    //     // System.out.println(gp.routeDistance(gp.route(new Point(47.578813, -122.139773), new Point(47.632292, -122.187898))));
+    //     System.out.println(gp.connected(new Point(35.989709, -78.902124), new Point(35.834585, -78.638592)));
+    //     System.out.println();
+    // }
 }
