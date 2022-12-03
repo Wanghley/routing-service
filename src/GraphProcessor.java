@@ -199,11 +199,11 @@ public class GraphProcessor {
         return path;
     }
 
-    public static void main(String[] args) throws FileNotFoundException, Exception {
-        GraphProcessor gp = new GraphProcessor();
-        gp.initialize(new FileInputStream("data/simple.graph"));
-        System.out.println(gp.connected(new Point(2.0, -1.0), new Point(-1.0, 1.0)));
-        System.out.println(gp.route(new Point(2, -1), new Point(1, 1)));
-        System.out.println();
-    }
+    // public static void main(String[] args) throws FileNotFoundException, Exception {
+    //     GraphProcessor gp = new GraphProcessor();
+    //     gp.initialize(new FileInputStream("data/usa.graph"));
+    //     System.out.println(gp.connected(new Point(2.0, -1.0), new Point(-1.0, 1.0)));
+    //     System.out.println(gp.route(new Point(2, -1), new Point(1, 1)));
+    //     System.out.println();
+    // }
 }
