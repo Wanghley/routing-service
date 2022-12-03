@@ -133,10 +133,6 @@ public class GraphProcessor {
     private boolean dfs(Point p1, Point p2, HashSet<Point> visited) {
         if(!visited.contains(p1) && !visited.contains(p2)) {
             visited.add(p1);
-            if (p1.equals(new Point(36.032095, -78.84141))) {
-                System.out.println(p1+" "+edgesPoints.get(p1));
-                System.out.println();
-            }
             for (Point point : edgesPoints.get(p1)) {
                 if (point.equals(p2)) {
                     return true;
