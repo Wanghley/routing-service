@@ -120,11 +120,30 @@ public class GraphProcessor {
      * @param p2 another point
      * @return true if p2 is reachable from p1 (and vice versa)
      */
+    // FIXME: connected is not recognizing that the points are connected when they are
     public boolean connected(Point p1, Point p2) {
         HashSet<Point> visited = new HashSet<Point>();
-        return bfs(p1, p2, visited);
+        return dfs(p1, p2, visited);
+        // return bfs(p1, p2, visited);
     }
 
+    private boolean dfs(Point p1, Point p2, HashSet<Point> visited) {
+        if(!visited.contains(p1) && !visited.contains(p2)) {
+            visited.add(p1);
+            for (Point point : edgesPoints.get(p1)) {
+                if (point.equals(p2)) {
+                    return true;
+                }
+                if (dfs(point, p2, visited)) {
+                    return true;
+                
+            }
+        }
+    }
+        return false;
+    }
+
+    
 
     private boolean bfs(Point p1, Point p2, HashSet<Point> visited) {
         PriorityQueue<Point> queue = new PriorityQueue<Point>();
@@ -211,13 +230,13 @@ public class GraphProcessor {
         return path;
     }
 
-    // public static void main(String[] args) throws FileNotFoundException, Exception {
-    //     GraphProcessor gp = new GraphProcessor();
-    //     gp.initialize(new FileInputStream("data/simple.graph"));
-    //     // System.out.println(gp.connected(new Point(2.0, -1.0), new Point(-1.0, 1.0)));
-    //     // System.out.println(gp.route(new Point(47.578813, -122.139773), new Point(47.632292, -122.187898)));
-    //     // System.out.println(gp.routeDistance(gp.route(new Point(47.578813, -122.139773), new Point(47.632292, -122.187898))));
-    //     System.out.println(gp.connected(new Point(35.989709, -78.902124), new Point(35.834585, -78.638592)));
-    //     System.out.println();
-    // }
+    public static void main(String[] args) throws Exception {
+        GraphProcessor gp = new GraphProcessor();
+        gp.initialize(new FileInputStream("data/durham.graph"));
+        // System.out.println(gp.connected(new Point(2.0, -1.0), new Point(-1.0, 1.0)));
+        // System.out.println(gp.route(new Point(47.578813, -122.139773), new Point(47.632292, -122.187898)));
+        // System.out.println(gp.routeDistance(gp.route(new Point(47.578813, -122.139773), new Point(47.632292, -122.187898))));
+        System.out.println(gp.connected(new Point(35.989709, -78.902124), new Point(35.834585, -78.638592)));
+        System.out.println();
+    }
 }
