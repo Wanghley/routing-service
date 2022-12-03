@@ -2,7 +2,9 @@ import java.security.InvalidAlgorithmParameterException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.PriorityQueue;
 import java.util.Scanner;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -29,6 +31,7 @@ public class GraphProcessor {
     public void initialize(FileInputStream file) throws Exception {
         points = new HashMap<String, Point>();
         edges = new HashMap<String, HashSet<String>>();
+        edgesPoints = new HashMap<Point, HashSet<Point>>();
         ArrayList<String> vertices = new ArrayList<String>();
         try (Scanner input = new Scanner(file)) {
             double num_vertices = input.nextDouble();
@@ -49,9 +52,10 @@ public class GraphProcessor {
                 edges.get(vertices.get(cityIndex1)).add(vertices.get(cityIndex2));
                 edgesPoints.putIfAbsent(points.get(vertices.get(cityIndex1)), new HashSet<Point>());
                 edgesPoints.get(points.get(vertices.get(cityIndex1))).add(points.get(vertices.get(cityIndex2)));
-            }
+          }
         }catch (Exception e) {
-            throw new Exception("Could not read .graph file");
+            System.err.println(e.getStackTrace());
+            throw new Exception("Could not read .graph file"+e.getMessage());
         }
     }
 
@@ -103,7 +107,34 @@ public class GraphProcessor {
      * @return true if p2 is reachable from p1 (and vice versa)
      */
     public boolean connected(Point p1, Point p2) {
-        // TODO: Implement connected
+        HashSet<Point> visited = new HashSet<Point>();
+        return bfs(p1, p2, visited);
+    }
+
+
+    private boolean bfs(Point p1, Point p2, HashSet<Point> visited) {
+        PriorityQueue<Point> queue = new PriorityQueue<Point>();
+        if (p1.equals(p2)) {
+            return true;
+        }
+        visited.add(p1);
+        queue.add(p1);
+        
+        while (!queue.isEmpty()) {
+            Point current = queue.poll();
+            if(edgesPoints.get(current) == null) {
+                continue;
+            }
+            for (Point neighbor : edgesPoints.get(current)) {
+                if (neighbor.equals(p2)) {
+                    return true;
+                }
+                if (!visited.contains(neighbor)) {
+                    visited.add(neighbor);
+                    queue.add(neighbor);
+                }
+            }
+        }
         return false;
     }
 
@@ -127,5 +158,6 @@ public class GraphProcessor {
     public static void main(String[] args) throws FileNotFoundException, Exception {
         GraphProcessor gp = new GraphProcessor();
         gp.initialize(new FileInputStream("data/simple.graph"));
+        System.out.println(gp.connected(new Point(2.0, -1.0), new Point(-1.0, 1.0)));
     }
 }
