@@ -60,8 +60,16 @@ public class GraphProcessor {
      * @return The closest point in the graph to p
      */
     public Point nearestPoint(Point p) {
-        // TODO: Implement nearestPoint
-        return null;
+        double minDistance = Double.MAX_VALUE;
+        Point minPoint = null;
+        for (Point point : points.values()) {
+            double distance = p.distance(point);
+            if (distance < minDistance) {
+                minDistance = distance;
+                minPoint = point;
+            }
+        }
+        return minPoint;
     }
 
 
@@ -75,8 +83,11 @@ public class GraphProcessor {
      * @return The distance to get from start to end
      */
     public double routeDistance(List<Point> route) {
-        // TODO Implement routeDistance
-        return 0.0;
+        double distance = 0.0;
+        for (int i = 0; i < route.size() - 1; i++) {
+            distance += route.get(i).distance(route.get(i + 1));
+        }
+        return distance;
     }
     
 
