@@ -43,6 +43,7 @@ public class GraphProcessor {
                 double lon = input.nextDouble();
                 Point p = new Point(lat, lon);
                 points.put(city, p);
+                edgesPoints.put(p, new HashSet<Point>());
             }
             input.nextLine();
             for (int i = 0; i < num_edges; i++) {
@@ -65,7 +66,9 @@ public class GraphProcessor {
                 edges.putIfAbsent(vertices.get(cityIndex1), new HashSet<String>());
                 edges.get(vertices.get(cityIndex1)).add(vertices.get(cityIndex2));
                 edgesPoints.putIfAbsent(points.get(vertices.get(cityIndex1)), new HashSet<Point>());
+                edgesPoints.putIfAbsent(points.get(vertices.get(cityIndex2)), new HashSet<Point>());
                 edgesPoints.get(points.get(vertices.get(cityIndex1))).add(points.get(vertices.get(cityIndex2)));
+                edgesPoints.get(points.get(vertices.get(cityIndex2))).add(points.get(vertices.get(cityIndex1)));
           }
         }catch (Exception e) {
             throw new Exception("Could not read .graph file");
@@ -130,6 +133,10 @@ public class GraphProcessor {
     private boolean dfs(Point p1, Point p2, HashSet<Point> visited) {
         if(!visited.contains(p1) && !visited.contains(p2)) {
             visited.add(p1);
+            if (p1.equals(new Point(36.032095, -78.84141))) {
+                System.out.println(p1+" "+edgesPoints.get(p1));
+                System.out.println();
+            }
             for (Point point : edgesPoints.get(p1)) {
                 if (point.equals(p2)) {
                     return true;
