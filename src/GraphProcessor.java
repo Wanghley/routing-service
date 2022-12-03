@@ -46,8 +46,6 @@ public class GraphProcessor {
             }
             input.nextLine();
             for (int i = 0; i < num_edges; i++) {
-                // FIXME: Need to add the edges to the graph according to the file of USA roads
-                // The file has int int String and not int int as previous
                 String line = input.nextLine();
                 String[] lineSplit = line.split(" ");
                 int cityIndex1=-1;
