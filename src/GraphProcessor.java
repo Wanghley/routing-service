@@ -35,8 +35,7 @@ public class GraphProcessor {
         edges = new HashMap<String, HashSet<String>>();
         edgesPoints = new HashMap<Point, HashSet<Point>>();
         ArrayList<String> vertices = new ArrayList<String>();
-        // try {
-            Scanner input = new Scanner(file);
+        try (Scanner input = new Scanner(file)){
             double num_vertices = input.nextDouble();
             double num_edges = input.nextDouble();
 
@@ -48,20 +47,34 @@ public class GraphProcessor {
                 Point p = new Point(lat, lon);
                 points.put(city, p);
             }
+            input.nextLine();
             for (int i = 0; i < num_edges; i++) {
                 // FIXME: Need to add the edges to the graph according to the file of USA roads
                 // The file has int int String and not int int as previous
-                int cityIndex1 = input.nextInt();
-                int cityIndex2 = input.nextInt();
+                String line = input.nextLine();
+                String[] lineSplit = line.split(" ");
+                int cityIndex1=-1;
+                int cityIndex2=-1;
+                String roadName = "";
+                if(lineSplit.length==2){
+                    cityIndex1 = Integer.parseInt(lineSplit[0]);
+                    cityIndex2 = Integer.parseInt(lineSplit[1]);
+                }else if (lineSplit.length==3){
+                    cityIndex1 = Integer.parseInt(lineSplit[0]);
+                    cityIndex2 = Integer.parseInt(lineSplit[1]);
+                    roadName = lineSplit[2];
+                }else{
+                    throw new InvalidAlgorithmParameterException("Invalid file format");
+                }
+                
                 edges.putIfAbsent(vertices.get(cityIndex1), new HashSet<String>());
                 edges.get(vertices.get(cityIndex1)).add(vertices.get(cityIndex2));
                 edgesPoints.putIfAbsent(points.get(vertices.get(cityIndex1)), new HashSet<Point>());
                 edgesPoints.get(points.get(vertices.get(cityIndex1))).add(points.get(vertices.get(cityIndex2)));
           }
-        // }catch (Exception e) {
-        //     System.err.println();
-        //     throw new Exception("Could not read .graph file"+e.getMessage()+e.getCause());
-        // }
+        }catch (Exception e) {
+            throw new Exception("Could not read .graph file");
+        }
     }
 
 
