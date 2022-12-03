@@ -26,16 +26,17 @@ public class GraphProcessor {
      * @param file a FileInputStream of the .graph file
      * @throws Exception if file not found or error reading
      */
-    HashMap<String, Point> points;
-    HashMap<Point, HashSet<Point>> edgesPoints;
-    HashMap<String, HashSet<String>> edges;
+    private HashMap<String, Point> points;
+    private HashMap<Point, HashSet<Point>> edgesPoints;
+    private HashMap<String, HashSet<String>> edges;
 
     public void initialize(FileInputStream file) throws Exception {
         points = new HashMap<String, Point>();
         edges = new HashMap<String, HashSet<String>>();
         edgesPoints = new HashMap<Point, HashSet<Point>>();
         ArrayList<String> vertices = new ArrayList<String>();
-        try (Scanner input = new Scanner(file)) {
+        // try {
+            Scanner input = new Scanner(file);
             double num_vertices = input.nextDouble();
             double num_edges = input.nextDouble();
 
@@ -48,6 +49,8 @@ public class GraphProcessor {
                 points.put(city, p);
             }
             for (int i = 0; i < num_edges; i++) {
+                // FIXME: Need to add the edges to the graph according to the file of USA roads
+                // The file has int int String and not int int as previous
                 int cityIndex1 = input.nextInt();
                 int cityIndex2 = input.nextInt();
                 edges.putIfAbsent(vertices.get(cityIndex1), new HashSet<String>());
@@ -55,10 +58,10 @@ public class GraphProcessor {
                 edgesPoints.putIfAbsent(points.get(vertices.get(cityIndex1)), new HashSet<Point>());
                 edgesPoints.get(points.get(vertices.get(cityIndex1))).add(points.get(vertices.get(cityIndex2)));
           }
-        }catch (Exception e) {
-            System.err.println(e.getStackTrace());
-            throw new Exception("Could not read .graph file"+e.getMessage());
-        }
+        // }catch (Exception e) {
+        //     System.err.println();
+        //     throw new Exception("Could not read .graph file"+e.getMessage()+e.getCause());
+        // }
     }
 
 
@@ -199,11 +202,11 @@ public class GraphProcessor {
         return path;
     }
 
-    // public static void main(String[] args) throws FileNotFoundException, Exception {
-    //     GraphProcessor gp = new GraphProcessor();
-    //     gp.initialize(new FileInputStream("data/usa.graph"));
-    //     System.out.println(gp.connected(new Point(2.0, -1.0), new Point(-1.0, 1.0)));
-    //     System.out.println(gp.route(new Point(2, -1), new Point(1, 1)));
-    //     System.out.println();
-    // }
+    public static void main(String[] args) throws FileNotFoundException, Exception {
+        GraphProcessor gp = new GraphProcessor();
+        gp.initialize(new FileInputStream("data/usa.graph"));
+        System.out.println(gp.connected(new Point(2.0, -1.0), new Point(-1.0, 1.0)));
+        System.out.println(gp.route(new Point(2, -1), new Point(1, 1)));
+        System.out.println();
+    }
 }
