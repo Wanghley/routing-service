@@ -13,8 +13,11 @@ import java.util.Collections;
  * and supports various distance and routing operations.
  * To do: Add your name(s) as additional authors
  * @author Brandon Fain
+ * @author Wanghley Soares Martins
+ * @author Aseda
  *
  */
+
 public class GraphProcessor {
     /**
      * Creates and initializes a graph from a source data
@@ -23,57 +26,53 @@ public class GraphProcessor {
      * @param file a FileInputStream of the .graph file
      * @throws Exception if file not found or error reading
      */
-    private HashMap<String, Point> points;
-    private HashMap<Point, HashSet<Point>> edgesPoints;
-    private HashMap<String, HashSet<String>> edges;
 
+    private int vertexes; // A variable that stores the number of vertexes in the graph.
+    private int edges; // A variable that stores the number of edges in the graph.
+    private ArrayList<Point> vertexArrayList; // A list of all the points in the graph.
+    private HashMap<Point, List<Point>> graph; // A graph (stored as a map) that stores the points as keys and the neighbors of each point as values.
+
+    /**
+     * It reads the graph file and creates a HashMap of the graph
+     * 
+     * @param file The file to read from
+     */
     public void initialize(FileInputStream file) throws Exception {
-        points = new HashMap<String, Point>();
-        edges = new HashMap<String, HashSet<String>>();
-        edgesPoints = new HashMap<Point, HashSet<Point>>();
-        ArrayList<String> vertices = new ArrayList<String>();
-        try (Scanner input = new Scanner(file)){
-            double num_vertices = input.nextDouble();
-            double num_edges = input.nextDouble();
+        try (Scanner scanner = new Scanner(file)) {
+            vertexes = scanner.nextInt(); // Reading the number of vertexes in the graph.
+            edges = scanner.nextInt(); // Reading the number of edges in the graph.
+            graph = new HashMap<>();
+            vertexArrayList = new ArrayList<>();
 
-            for(int i = 0; i < num_vertices; i++) {
-                String city = input.next();
-                vertices.add(city);
-                double lat = input.nextDouble();
-                double lon = input.nextDouble();
-                Point p = new Point(lat, lon);
-                points.put(city, p);
-                edgesPoints.put(p, new HashSet<Point>());
+            // Reading the vertexes from the file and adding them to the vertexArrayList.
+            for (int i = 0; i < vertexes; i++) {
+                scanner.next();
+                double a = scanner.nextDouble();
+                double b = scanner.nextDouble();
+                vertexArrayList.add(new Point(a,b));
             }
-            input.nextLine();
-            for (int i = 0; i < num_edges; i++) {
-                String line = input.nextLine();
-                String[] lineSplit = line.split(" ");
-                int cityIndex1=-1;
-                int cityIndex2=-1;
-                String roadName = "";
-                if(lineSplit.length==2){
-                    cityIndex1 = Integer.parseInt(lineSplit[0]);
-                    cityIndex2 = Integer.parseInt(lineSplit[1]);
-                }else if (lineSplit.length==3){
-                    cityIndex1 = Integer.parseInt(lineSplit[0]);
-                    cityIndex2 = Integer.parseInt(lineSplit[1]);
-                    roadName = lineSplit[2];
-                }else{
-                    throw new InvalidAlgorithmParameterException("Invalid file format");
+
+            // Reading the edges from the file and adding them to the graph.
+            for (int i = 0; i < edges; i++) {
+                Point node_a = vertexArrayList.get(scanner.nextInt());
+                Point node_b = vertexArrayList.get(scanner.nextInt());
+                if (scanner.hasNextLine()) {
+                    scanner.nextLine();
+                } else {
+                    break;
                 }
-                
-                edges.putIfAbsent(vertices.get(cityIndex1), new HashSet<String>());
-                edges.get(vertices.get(cityIndex1)).add(vertices.get(cityIndex2));
-                edgesPoints.putIfAbsent(points.get(vertices.get(cityIndex1)), new HashSet<Point>());
-                edgesPoints.putIfAbsent(points.get(vertices.get(cityIndex2)), new HashSet<Point>());
-                edgesPoints.get(points.get(vertices.get(cityIndex1))).add(points.get(vertices.get(cityIndex2)));
-                edgesPoints.get(points.get(vertices.get(cityIndex2))).add(points.get(vertices.get(cityIndex1)));
-          }
-        }catch (Exception e) {
+                graph.putIfAbsent(node_a, new ArrayList<>());
+                ArrayList<Point> neighbors = (ArrayList<Point>) graph.get(node_a);
+                neighbors.add(node_b);
+                graph.put(node_a, neighbors);
+                graph.putIfAbsent(node_b, new ArrayList<>());
+                neighbors = (ArrayList<Point>) graph.get(node_b);
+                neighbors.add(node_a);
+                graph.put(node_b, neighbors);
+            }
+        }  catch (Exception e) {
             throw new Exception("Could not read .graph file");
         }
-        System.out.println();
     }
 
 
@@ -84,16 +83,16 @@ public class GraphProcessor {
      * @return The closest point in the graph to p
      */
     public Point nearestPoint(Point p) {
-        double minDistance = Double.MAX_VALUE;
-        Point minPoint = null;
-        for (Point point : points.values()) {
-            double distance = p.distance(point);
-            if (distance < minDistance) {
-                minDistance = distance;
-                minPoint = point;
+        Point closerPoint = null;
+        double min_dist = Double.MAX_VALUE;
+        for (Point np: vertexArrayList) {
+            double dist = p.distance(np);
+            if (dist < min_dist) {
+                min_dist = dist;
+                closerPoint = np;
             }
         }
-        return minPoint;
+        return closerPoint;
     }
 
 
@@ -108,8 +107,8 @@ public class GraphProcessor {
      */
     public double routeDistance(List<Point> route) {
         double distance = 0.0;
-        for (int i = 0; i < route.size() - 1; i++) {
-            distance += route.get(i).distance(route.get(i + 1));
+        for (int i = 0; i < route.size()-1; i++) {
+            distance += route.get(i).distance(route.get(i+1));
         }
         return distance;
     }
@@ -123,55 +122,14 @@ public class GraphProcessor {
      * @param p2 another point
      * @return true if p2 is reachable from p1 (and vice versa)
      */
-    // FIXME: connected is not recognizing that the points are connected when they are
+
     public boolean connected(Point p1, Point p2) {
-        HashSet<Point> visited = new HashSet<Point>();
-        return dfs(p1, p2, visited);
-        // return bfs(p1, p2, visited);
-    }
-
-    private boolean dfs(Point p1, Point p2, HashSet<Point> visited) {
-        if(!visited.contains(p1) && !visited.contains(p2)) {
-            visited.add(p1);
-            for (Point point : edgesPoints.get(p1)) {
-                if (point.equals(p2)) {
-                    return true;
-                }
-                if (dfs(point, p2, visited)) {
-                    return true;
-                
-            }
-        }
-    }
-        return false;
-    }
-
-    
-
-    private boolean bfs(Point p1, Point p2, HashSet<Point> visited) {
-        PriorityQueue<Point> queue = new PriorityQueue<Point>();
-        if (p1.equals(p2)) {
+        try {
+            route(p1, p2);
             return true;
+        } catch (InvalidAlgorithmParameterException e) {
+            return false;
         }
-        visited.add(p1);
-        queue.add(p1);
-        
-        while (!queue.isEmpty()) {
-            Point current = queue.poll();
-            if(edgesPoints.get(current) == null) {
-                continue;
-            }
-            for (Point neighbor : edgesPoints.get(current)) {
-                if (neighbor.equals(p2)) {
-                    return true;
-                }
-                if (!visited.contains(neighbor)) {
-                    visited.add(neighbor);
-                    queue.add(neighbor);
-                }
-            }
-        }
-        return false;
     }
 
 
@@ -188,58 +146,106 @@ public class GraphProcessor {
      * either because start is not connected to end or because start equals end.
      */
     public List<Point> route(Point start, Point end) throws InvalidAlgorithmParameterException {
-        if (start.equals(end)) {
-            throw new InvalidAlgorithmParameterException("Start and end are the same point");
-        }
-        if (!connected(start, end)) {
+        HashSet<Point> visited = new HashSet<>();
+        PriorityQueue<Vertex> pq = new PriorityQueue<>();
+        HashMap<Point, Double> distancesMap = new HashMap<>();
+        HashMap<Point, Point> pathMap = new HashMap<>();
+
+        if(!graph.containsKey(start) || !graph.containsKey(end)) {
             throw new InvalidAlgorithmParameterException("No path between start and end");
+
         }
-        ArrayList<Point> path = new ArrayList<Point>();
-        HashMap<Point, Double> distance = new HashMap<Point, Double>();
-        distance.put(start, 0.0);
-        PriorityQueue<Point> vertexQueue = new PriorityQueue<Point>();
-        vertexQueue.add(start);
-        HashMap<Point, Point> previous = new HashMap<Point, Point>();
 
-        while (!vertexQueue.isEmpty()) {
-            Point current = vertexQueue.poll();
+        distancesMap.put(start, 0.0);
+        pq.add(new Vertex(0, start));
 
-            // Visit each edge exiting u
-            if(edgesPoints.get(current) == null) {
-                continue;
+        while (!pq.isEmpty()) {
+            Vertex vertex = pq.remove();
+            Point point = vertex.point;
+            if (point.equals(end)) {
+                break;
             }
-            for (Point neighbor: edgesPoints.get(current)) {
-                double weight = current.distance(neighbor);
-                double distanceThroughCurrent = distance.get(current) + weight;
-                if (!distance.containsKey(neighbor) || distanceThroughCurrent < distance.get(neighbor)) {
-                    distance.put(neighbor, distanceThroughCurrent);
-                    previous.put(neighbor, current);
-                    vertexQueue.add(neighbor);
+            List<Point> neighbors = graph.get(point);
+            visited.add(point);
+            for (Point neighbor : neighbors) {
+                if (visited.contains(neighbor)) continue;
+                double dist = point.distance(neighbor);
+                double oldDist = distancesMap.getOrDefault(point, Double.MAX_VALUE);
+                double newDist = oldDist + dist;
+                double neighborDist = distancesMap.getOrDefault(neighbor, Double.MAX_VALUE);
+                if (neighborDist > newDist) {
+                    pathMap.put(neighbor, point);
+                    distancesMap.put(neighbor, newDist);
+                    pq.add(new Vertex(newDist, neighbor));
                 }
             }
         }
+        ArrayList<Point> path = new ArrayList<>();
+        Point point = end;
+        path.add(point);
+        boolean pathFound = true;
+        while (true) {
+            Point current = pathMap.get(point);
+            if (current == null) {
+                pathFound  = false;
+                break;
+            }
 
-        path = getShortestPathTo(end,previous);
+            if (current.equals(start)) {
+                path.add(current);
+                break;
+            }
 
-        return path;
-    }
-
-    private ArrayList<Point> getShortestPathTo(Point target, HashMap<Point, Point> previous){
-        ArrayList<Point> path = new ArrayList<Point>();
-        for (Point vertex = target; vertex != null; vertex = previous.get(vertex))
-            path.add(vertex);
-
+            point = current;
+            path.add(point);
+        }
+        if (!pathFound){
+            throw new InvalidAlgorithmParameterException("No path between start and end");
+        }
+        
         Collections.reverse(path);
-        return path;
+        
+        if (pathFound) {
+            return path;
+        }
+        
+        return null;
     }
 
-    // public static void main(String[] args) throws Exception {
-    //     GraphProcessor gp = new GraphProcessor();
-    //     gp.initialize(new FileInputStream("data/durham.graph"));
-    //     // System.out.println(gp.connected(new Point(2.0, -1.0), new Point(-1.0, 1.0)));
-    //     // System.out.println(gp.route(new Point(47.578813, -122.139773), new Point(47.632292, -122.187898)));
-    //     // System.out.println(gp.routeDistance(gp.route(new Point(47.578813, -122.139773), new Point(47.632292, -122.187898))));
-    //     System.out.println(gp.connected(new Point(35.989709, -78.902124), new Point(35.834585, -78.638592)));
-    //     System.out.println();
-    // }
+    public static void main(String[] args) throws Exception {
+        GraphProcessor gp = new GraphProcessor();
+        gp.initialize(new FileInputStream("data/usa.graph"));
+        // System.out.println(gp.connected(new Point(2.0, -1.0), new Point(-1.0, 1.0)));
+        // System.out.println(gp.route(new Point(47.578813, -122.139773), new Point(47.632292, -122.187898)));
+        // System.out.println(gp.routeDistance(gp.route(new Point(47.578813, -122.139773), new Point(47.632292, -122.187898))));
+        System.out.println(gp.connected(new Point(35.989709, -78.902124), new Point(35.834585, -78.638592)));
+        System.out.println(gp.route(new Point(35.989709, -78.902124), new Point(35.834585, -78.638592)));
+        System.out.println();
+    }
+}
+
+/**
+ * A Vertex is a point with a distance and it is comparable by distance to other vertices.
+ * It is used in the priority queue in the route method to find the shortest path.
+ * TODO: Think in implement route without using the Vertex class.
+ */
+class Vertex implements Comparable<Vertex> {
+    public double dist;
+    public Point point;
+
+    Vertex(double distance ,Point point) {
+        this.dist = distance;
+        this.point = point;
+    }
+
+    @Override
+    public int compareTo(Vertex vertex) {
+        int distance = (int) (this.dist - vertex.dist);
+        return distance;
+    }
+
+    @Override
+    public String toString() {
+        return  this.dist + " ,(" + this.point.getLat() + ", " + this.point.getLon() + ")";
+    }
 }
