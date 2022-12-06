@@ -13,8 +13,8 @@ import java.util.Collections;
  * and supports various distance and routing operations.
  * To do: Add your name(s) as additional authors
  * @author Brandon Fain
- * @author Wanghley Soares Martins
- * @author Aseda
+ * @author Wanghley Soares Martins (@wanghley)
+ * @author Aseda Asomani (@_bennoni_)
  *
  */
 
