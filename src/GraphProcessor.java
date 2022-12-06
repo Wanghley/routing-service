@@ -123,6 +123,13 @@ public class GraphProcessor {
      * @return true if p2 is reachable from p1 (and vice versa)
      */
 
+    /**
+     * If there is a route between p1 and p2, return true, otherwise return false.
+     * 
+     * @param p1 The first point
+     * @param p2 The point to which we want to find a path
+     * @return A boolean value.
+     */
     public boolean connected(Point p1, Point p2) {
         try {
             route(p1, p2);
@@ -151,6 +158,7 @@ public class GraphProcessor {
         HashMap<Point, Double> distancesMap = new HashMap<>();
         HashMap<Point, Point> pathMap = new HashMap<>();
 
+        // Checking if the start and end points are in the graph. If they are not, it throws an exception.
         if(!graph.containsKey(start) || !graph.containsKey(end)) {
             throw new InvalidAlgorithmParameterException("No path between start and end");
 
@@ -159,6 +167,7 @@ public class GraphProcessor {
         distancesMap.put(start, 0.0);
         pq.add(new Vertex(0, start));
 
+        // Finding the shortest path between two points.
         while (!pq.isEmpty()) {
             Vertex vertex = pq.remove();
             Point point = vertex.point;
@@ -180,10 +189,13 @@ public class GraphProcessor {
                 }
             }
         }
+
         ArrayList<Point> path = new ArrayList<>();
         Point point = end;
         path.add(point);
         boolean pathFound = true;
+
+        // Finding the path from the end point to the start point.
         while (true) {
             Point current = pathMap.get(point);
             if (current == null) {
@@ -199,10 +211,12 @@ public class GraphProcessor {
             point = current;
             path.add(point);
         }
+
         if (!pathFound){
             throw new InvalidAlgorithmParameterException("No path between start and end");
         }
         
+        // It reverses the order of the elements in the list for the path to be from start to end.
         Collections.reverse(path);
         
         if (pathFound) {
