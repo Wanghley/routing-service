@@ -55,7 +55,6 @@ public class GraphProcessor {
                 double b = scanner.nextDouble();
                 Point p = new Point(a,b);
                 vertexArrayList.add(p);
-                pointHashMap.put(name, p);
 
             }
 
@@ -81,6 +80,7 @@ public class GraphProcessor {
 
             map = graph;
         }  catch (Exception e) {
+            System.out.println(e);
             throw new Exception("Could not read .graph file");
         }
     }
