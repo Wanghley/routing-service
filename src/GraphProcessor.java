@@ -31,6 +31,8 @@ public class GraphProcessor {
     private int edges; // A variable that stores the number of edges in the graph.
     private ArrayList<Point> vertexArrayList; // A list of all the points in the graph.
     private HashMap<Point, List<Point>> graph; // A graph (stored as a map) that stores the points as keys and the neighbors of each point as values.
+    public HashMap<Point, List<Point>> map; // A graph (stored as a map) that stores the points as keys and the neighbors of each point as values.
+
 
     /**
      * It reads the graph file and creates a HashMap of the graph
@@ -69,7 +71,10 @@ public class GraphProcessor {
                 neighbors = (ArrayList<Point>) graph.get(node_b);
                 neighbors.add(node_a);
                 graph.put(node_b, neighbors);
+                
             }
+
+            map = graph;
         }  catch (Exception e) {
             throw new Exception("Could not read .graph file");
         }
