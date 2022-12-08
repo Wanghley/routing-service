@@ -31,13 +31,10 @@ public class GraphProcessor {
     private int edges; // A variable that stores the number of edges in the graph.
     private ArrayList<Point> vertexArrayList; // A list of all the points in the graph.
     private HashMap<Point, List<Point>> graph; // A graph (stored as a map) that stores the points as keys and the neighbors of each point as values.
-<<<<<<< HEAD
     public HashMap<Point, List<Point>> map; // A graph (stored as a map) that stores the points as keys and the neighbors of each point as values.
 
 
-=======
     private HashMap<String, Point> pointHashMap; // A map that stores the points as keys and the points as values.
->>>>>>> 964c511e4b1a97642b9036a2e46f8b26345bffc5
     /**
      * It reads the graph file and creates a HashMap of the graph
      * 
