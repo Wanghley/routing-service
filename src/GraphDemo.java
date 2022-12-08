@@ -115,8 +115,8 @@ public class GraphDemo {
 
     public static void main(String[] args) throws Exception {
         GraphDemo test = new GraphDemo();
-        String path = "/Users/asomani/Desktop/CS201/Projects/routing-service/data/usa.graph";
-        String csv = "/Users/asomani/Desktop/CS201/Projects/routing-service/data/uscities.csv";
+        String path = "data/usa.graph";
+        String csv = "data/uscities.csv";
 
         test.start(path, csv);
         
