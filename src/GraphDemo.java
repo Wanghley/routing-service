@@ -4,10 +4,7 @@
  * Visualize
  * To do: Add your name(s) as authors
  */
-import java.io.File;
-import java.io.FileInputStream;
-import java.util.Scanner;
-import java.io.FileInputStream;
+import java.io.*;
 import java.util.*;
 
 public class GraphDemo {
@@ -16,6 +13,8 @@ public class GraphDemo {
     public HashMap<String, Point> citlist = new HashMap<>(); // A copy of a graph (stored as a map) that stores the points as keys and the neighbors of each point as values.
     String origin;
     String end;
+    List<Point> directions = new ArrayList<>();
+    double distance;
 
     /**
      * Asks the user to input the city and state they are leaving and the city and state of their destination.
@@ -25,9 +24,9 @@ public class GraphDemo {
      */
     public void start(String path, String csv) throws Exception {
 
-        // File name = new File(path);
-        // FileInputStream file = new FileInputStream(name);
-        // process.initialize(file);
+        File name = new File(path);
+        FileInputStream file = new FileInputStream(name);
+        process.initialize(file);
 
         try (Scanner cities = new Scanner(System.in)) {
 
@@ -53,6 +52,10 @@ public class GraphDemo {
         
         System.out.println(origin + "'s coordinates are: " + citlist.get(origin));
         System.out.println(end + "'s coordinates are: " + citlist.get(end));
+
+        directions = process.route(citlist.get(origin), citlist.get(end));
+        distance = process.routeDistance(directions);
+        System.out.println("The distance between your origin and your destination is : " + distance);
     }
 
     /**
@@ -73,13 +76,6 @@ public class GraphDemo {
                 String citinfo = usc.nextLine();
                 
                 String[] local = citinfo.split(",");
-
-                // System.out.println(local.length);
-                // System.out.println(Arrays.toString(local));
-                // System.out.println(local[0]);
-                // System.out.println(local[1]);
-                // System.out.println(local[2]);
-                // System.out.println(local[3]);
 
                 String locale = local[0] + " " + local[1];
                 citlist.put(locale, new Point(Double.parseDouble(local[2]), Double.parseDouble(local[3])));
