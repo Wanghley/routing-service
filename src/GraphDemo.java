@@ -37,13 +37,13 @@ public class GraphDemo {
 
         try (Scanner cities = new Scanner(System.in)) {
 
-            System.out.println("What city and state are you starting in?" + "\n" + "Enter city name and state initials separated by a space: ");
+            System.out.println("\n" + "\n" + "What city and state are you starting in?" + "\n" + "Enter city name and state initials separated by a space: ");
             origin = cities.nextLine();
-            System.out.println("Your city of origin is: " + origin);
+            System.out.println("Your city of origin is: " + origin + "\n");
 
             System.out.println("Where are you going?" + "\n" + "Enter city name and state initials separated by a space: ");
             end = cities.nextLine();
-            System.out.println("Your destination is: " + end);
+            System.out.println("Your destination is: " + end + "\n");
 
             cities.close();
 
@@ -57,8 +57,8 @@ public class GraphDemo {
             // throw new Exception("Could not read .csv file.");
         }
         
-        System.out.println(origin + "'s nearest coordinates are: " + citlist.get(origin));
-        System.out.println(end + "'s nearest coordinates are: " + citlist.get(end));
+        System.out.println("\n" + origin + "'s nearest coordinates are: " + citlist.get(origin));
+        System.out.println(end + "'s nearest coordinates are: " + citlist.get(end) + "\n");
 
         long startOrigin = System.nanoTime();
         Point nearOrigin = process.nearestPoint(citlist.get(origin));
@@ -78,7 +78,7 @@ public class GraphDemo {
 
         System.out.println("The distance between your origin and your destination is: " + distance + "miles" + "\n");
 
-        System.out.println("Total time to get nearest points, calculate the route, and calculate the distance: " + TimeUnit.NANOSECONDS.toMillis(proximalOrigin + proximalEnd + routeTime + distTime) + "ms" + "\n");
+        System.out.println("Total time to get nearest points, calculate the route, and calculate the distance: " + TimeUnit.NANOSECONDS.toMillis(proximalOrigin + proximalEnd + routeTime + distTime) + "ms" + "\n" + "\n");
 
         Visualize show = new Visualize(visFile, imgFile);
         show.drawPoint(nearOrigin);
