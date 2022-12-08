@@ -31,9 +31,13 @@ public class GraphProcessor {
     private int edges; // A variable that stores the number of edges in the graph.
     private ArrayList<Point> vertexArrayList; // A list of all the points in the graph.
     private HashMap<Point, List<Point>> graph; // A graph (stored as a map) that stores the points as keys and the neighbors of each point as values.
+<<<<<<< HEAD
     public HashMap<Point, List<Point>> map; // A graph (stored as a map) that stores the points as keys and the neighbors of each point as values.
 
 
+=======
+    private HashMap<String, Point> pointHashMap; // A map that stores the points as keys and the points as values.
+>>>>>>> 964c511e4b1a97642b9036a2e46f8b26345bffc5
     /**
      * It reads the graph file and creates a HashMap of the graph
      * 
@@ -48,10 +52,13 @@ public class GraphProcessor {
 
             // Reading the vertexes from the file and adding them to the vertexArrayList.
             for (int i = 0; i < vertexes; i++) {
-                scanner.next();
+                String name = scanner.next();
                 double a = scanner.nextDouble();
                 double b = scanner.nextDouble();
-                vertexArrayList.add(new Point(a,b));
+                Point p = new Point(a,b);
+                vertexArrayList.add(p);
+                pointHashMap.put(name, p);
+
             }
 
             // Reading the edges from the file and adding them to the graph.
@@ -77,6 +84,14 @@ public class GraphProcessor {
             map = graph;
         }  catch (Exception e) {
             throw new Exception("Could not read .graph file");
+        }
+    }
+
+    public Point getPointFromCityName(String name) {
+        if(pointHashMap.containsKey(name)) {
+            return pointHashMap.get(name);
+        }else{
+            throw new IllegalArgumentException("City not found");
         }
     }
 
@@ -210,6 +225,7 @@ public class GraphProcessor {
 
             if (current.equals(start)) {
                 path.add(current);
+                System.out.println();
                 break;
             }
 
