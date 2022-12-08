@@ -8,6 +8,7 @@
  */
 import java.io.*;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 
 public class GraphDemo {
     
@@ -36,11 +37,11 @@ public class GraphDemo {
 
         try (Scanner cities = new Scanner(System.in)) {
 
-            System.out.println("What city and state(use initials and separate from city with a space) are you starting in?");
+            System.out.println("What city and state are you starting in?" + "\n" + "Enter city name and state initials separated by a space: ");
             origin = cities.nextLine();
             System.out.println("Your city of origin is: " + origin);
 
-            System.out.println("Where are you going(use same format as before)?");
+            System.out.println("Where are you going?" + "\n" + "Enter city name and state initials separated by a space: ");
             end = cities.nextLine();
             System.out.println("Your destination is: " + end);
 
@@ -56,8 +57,8 @@ public class GraphDemo {
             // throw new Exception("Could not read .csv file.");
         }
         
-        System.out.println(origin + "'s coordinates are: " + citlist.get(origin));
-        System.out.println(end + "'s coordinates are: " + citlist.get(end));
+        System.out.println(origin + "'s nearest coordinates are: " + citlist.get(origin));
+        System.out.println(end + "'s nearest coordinates are: " + citlist.get(end));
 
         long startOrigin = System.nanoTime();
         Point nearOrigin = process.nearestPoint(citlist.get(origin));
@@ -75,12 +76,9 @@ public class GraphDemo {
         distance = process.routeDistance(directions);
         long distTime = System.nanoTime() - startDist;
 
-        System.out.println("The distance between your origin and your destination is: " + distance + "\n");
+        System.out.println("The distance between your origin and your destination is: " + distance + "miles" + "\n");
 
-        System.out.println("Nearest point to origin runtime: " + proximalOrigin);
-        System.out.println("Nearest point to destination runtime: " + proximalEnd);
-        System.out.println("Route runtime: " + routeTime);
-        System.out.println("Distance runtime: " + distTime + "\n");
+        System.out.println("Total time to get nearest points, calculate the route, and calculate the distance: " + TimeUnit.NANOSECONDS.toMillis(proximalOrigin + proximalEnd + routeTime + distTime) + "ms" + "\n");
 
         Visualize show = new Visualize(visFile, imgFile);
         show.drawPoint(nearOrigin);
