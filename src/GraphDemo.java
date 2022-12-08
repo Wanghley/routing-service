@@ -76,7 +76,7 @@ public class GraphDemo {
         distance = process.routeDistance(directions);
         long distTime = System.nanoTime() - startDist;
 
-        System.out.println("The distance between your origin and your destination is: " + distance + "miles" + "\n");
+        System.out.println("The distance between your origin and your destination is: " + distance + " miles" + "\n");
 
         System.out.println("Total time to get nearest points, calculate the route, and calculate the distance: " + TimeUnit.NANOSECONDS.toMillis(proximalOrigin + proximalEnd + routeTime + distTime) + "ms" + "\n" + "\n");
 
