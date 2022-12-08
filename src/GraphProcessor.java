@@ -35,7 +35,6 @@ public class GraphProcessor {
     public HashMap<Point, List<Point>> map; // A graph (stored as a map) that stores the points as keys and the neighbors of each point as values.
 
 
-    private HashMap<String, Point> pointHashMap; // A map that stores the points as keys and the points as values.
     /**
      * It reads the graph file and creates a HashMap of the graph
      * 
@@ -80,20 +79,9 @@ public class GraphProcessor {
 
             map = graph;
         }  catch (Exception e) {
-            System.out.println(e);
             throw new Exception("Could not read .graph file");
         }
     }
-
-    public Point getPointFromCityName(String name) {
-        if(pointHashMap.containsKey(name)) {
-            return pointHashMap.get(name);
-        }else{
-            throw new IllegalArgumentException("City not found");
-        }
-    }
-
-
     /**
      * Searches for the point in the graph that is closest in
      * straight-line distance to the parameter point p
