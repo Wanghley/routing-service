@@ -7,6 +7,7 @@ import java.util.PriorityQueue;
 import java.util.Scanner;
 import java.io.FileInputStream;
 import java.util.Collections;
+import java.util.Comparator;
 
 /**
  * Models a weighted graph of latitude-longitude points
@@ -154,9 +155,14 @@ public class GraphProcessor {
      */
     public List<Point> route(Point start, Point end) throws InvalidAlgorithmParameterException {
         HashSet<Point> visited = new HashSet<>();
-        PriorityQueue<Vertex> pq = new PriorityQueue<>();
         HashMap<Point, Double> distancesMap = new HashMap<>();
         HashMap<Point, Point> pathMap = new HashMap<>();
+        Comparator<Point> comparator = (p1, p2) -> {
+            double dist1 = distancesMap.get(p1);
+            double dist2 = distancesMap.get(p2);
+            return Double.compare(dist1, dist2);
+        };
+        PriorityQueue<Point> pq = new PriorityQueue<>(comparator);
 
         // Checking if the start and end points are in the graph. If they are not, it throws an exception.
         if(!graph.containsKey(start) || !graph.containsKey(end)) {
@@ -165,12 +171,11 @@ public class GraphProcessor {
         }
 
         distancesMap.put(start, 0.0);
-        pq.add(new Vertex(0, start));
+        pq.add(start);
 
         // Finding the shortest path between two points.
         while (!pq.isEmpty()) {
-            Vertex vertex = pq.remove();
-            Point point = vertex.point;
+            Point point = pq.remove();
             if (point.equals(end)) {
                 break;
             }
@@ -185,7 +190,7 @@ public class GraphProcessor {
                 if (neighborDist > newDist) {
                     pathMap.put(neighbor, point);
                     distancesMap.put(neighbor, newDist);
-                    pq.add(new Vertex(newDist, neighbor));
+                    pq.add(neighbor);
                 }
             }
         }
@@ -236,30 +241,4 @@ public class GraphProcessor {
     //     System.out.println(gp.route(new Point(35.989709, -78.902124), new Point(35.834585, -78.638592)));
     //     System.out.println();
     // }
-}
-
-/**
- * A Vertex is a point with a distance and it is comparable by distance to other vertices.
- * It is used in the priority queue in the route method to find the shortest path.
- * TODO: Think in implement route without using the Vertex class.
- */
-class Vertex implements Comparable<Vertex> {
-    public double dist;
-    public Point point;
-
-    Vertex(double distance ,Point point) {
-        this.dist = distance;
-        this.point = point;
-    }
-
-    @Override
-    public int compareTo(Vertex vertex) {
-        int distance = (int) (this.dist - vertex.dist);
-        return distance;
-    }
-
-    @Override
-    public String toString() {
-        return  this.dist + " ,(" + this.point.getLat() + ", " + this.point.getLon() + ")";
-    }
 }
