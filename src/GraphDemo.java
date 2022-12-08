@@ -3,6 +3,8 @@
  * network, showing the functionality of GraphProcessor and using
  * Visualize
  * To do: Add your name(s) as authors
+ * @author Aseda Asomani (@_bennoni_)
+ * @author Wanghley Soares Martins (@wanghley)
  */
 import java.io.*;
 import java.util.*;
@@ -10,7 +12,9 @@ import java.util.*;
 public class GraphDemo {
     
     GraphProcessor process = new GraphProcessor();
-    public HashMap<String, Point> citlist = new HashMap<>(); // A copy of a graph (stored as a map) that stores the points as keys and the neighbors of each point as values.
+    String visFile = "data/usa.vis";
+    String imgFile = "images/usa.png";
+    public HashMap<String, Point> citlist = new HashMap<>(); // A copy of a graph (stored as a map) that stores the points as keys and the coordinates of each as values.
     String origin;
     String end;
     List<Point> directions = new ArrayList<>();
@@ -23,6 +27,8 @@ public class GraphDemo {
      * @throws Exception
      */
     public void start(String path, String csv) throws Exception {
+
+        
 
         File name = new File(path);
         FileInputStream file = new FileInputStream(name);
@@ -53,9 +59,34 @@ public class GraphDemo {
         System.out.println(origin + "'s coordinates are: " + citlist.get(origin));
         System.out.println(end + "'s coordinates are: " + citlist.get(end));
 
-        directions = process.route(citlist.get(origin), citlist.get(end));
+        long startOrigin = System.nanoTime();
+        Point nearOrigin = process.nearestPoint(citlist.get(origin));
+        long proximalOrigin = System.nanoTime() - startOrigin;
+
+        long startEnd = System.nanoTime();
+        Point nearEnd = process.nearestPoint(citlist.get(end));
+        long proximalEnd = System.nanoTime() - startEnd;
+
+        long startRoute = System.nanoTime();
+        directions = process.route(nearOrigin, nearEnd);
+        long routeTime = System.nanoTime() - startRoute;
+
+        long startDist = System.nanoTime();
         distance = process.routeDistance(directions);
-        System.out.println("The distance between your origin and your destination is : " + distance);
+        long distTime = System.nanoTime() - startDist;
+
+        System.out.println("The distance between your origin and your destination is: " + distance + "\n");
+
+        System.out.println("Nearest point to origin runtime: " + proximalOrigin);
+        System.out.println("Nearest point to destination runtime: " + proximalEnd);
+        System.out.println("Route runtime: " + routeTime);
+        System.out.println("Distance runtime: " + distTime + "\n");
+
+        Visualize show = new Visualize(visFile, imgFile);
+        show.drawPoint(nearOrigin);
+        show.drawPoint(nearEnd);
+        show.drawRoute(directions);
+
     }
 
     /**
@@ -65,11 +96,10 @@ public class GraphDemo {
      * @throws Exception
      */
     public void readit(String path, String csv) throws Exception{
-        
+
         
         File places = new File(csv);
         
-
         try (Scanner usc = new Scanner(places)) {
 
             while (usc.hasNext()) {
@@ -82,12 +112,8 @@ public class GraphDemo {
             }
             usc.close();
         }
-
-        
         
     }
-
-
 
     public static void main(String[] args) throws Exception {
         GraphDemo test = new GraphDemo();
@@ -95,9 +121,6 @@ public class GraphDemo {
         String csv = "/Users/asomani/Desktop/CS201/Projects/routing-service/data/uscities.csv";
 
         test.start(path, csv);
-        
-        
-
         
     }
 }
