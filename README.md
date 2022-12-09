@@ -153,7 +153,7 @@ This application can also be used to simulate any other scenario in which a shor
 
 <div align="center">
 <a href="https://www.youtube.com/watch?v=ELbJdmaFDi4">
-    <img src="https://img.youtube.com/vi/ELbJdmaFDi4/0.jpg" alt="Logo" height="500">
+    <img src="https://img.youtube.com/vi/ELbJdmaFDi4/0.jpg" alt="Logo">
   </a>
 </div>
 
