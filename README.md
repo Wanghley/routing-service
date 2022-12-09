@@ -151,7 +151,11 @@ The current demo uses the terminal to insert the information from the start poin
 
 This application can also be used to simulate any other scenario in which a shortest path is needed. For communication purposes, traveling, and any other scenario. A full explanation demo can be found on the video below recorded by the authors of this project.
 
-<iframe width="560" height="315" src="https://www.youtube.com/embed/ELbJdmaFDi4" title="YouTube video player" frameborder="0" allowfullscreen></iframe>
+<div align="center">
+<a href="https://www.youtube.com/watch?v=ELbJdmaFDi4">
+    <img src="https://img.youtube.com/vi/ELbJdmaFDi4/0.jpg" alt="Logo" height="500">
+  </a>
+</div>
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
