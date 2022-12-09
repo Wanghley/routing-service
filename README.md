@@ -59,14 +59,14 @@
     <li>
       <a href="#about-the-project">About The Project</a>
     </li>
-    <!-- <li>
+    <li>
       <a href="#getting-started">Getting Started</a>
       <ul>
         <li><a href="#prerequisites">Prerequisites</a></li>
         <li><a href="#executing">Executing</a></li>
         <li><a href="#usage">Usage</a></li>
       </ul>
-    </li> -->
+    </li>
     <li><a href="#contributing">Contributing</a></li>
     <li><a href="#license">License</a></li>
     <li><a href="#contact">Contact</a></li>
@@ -90,38 +90,49 @@ In summary, this is a implementation of a routing service that plots the US high
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
-<!-- 
 
 ## Getting Started
 
-This is an example of how you may give instructions on setting up your project locally.
-To get a local copy up and running follow these simple example steps.
+This project was developed to provide you with an example of application of graph algorithms and it can be executed locally in your computer.
 
 ### Prerequisites
 
-This is an example of how to list things you need to use the software and how to install them.
-* npm
+* Linux
   ```sh
-  npm install npm@latest -g
+  sudo apt update -Y
+  java -version
   ```
+  ```sh
+  sudo apt install default-jdk
+  ```
+* MacOs
+  ```sh
+  brew upgrade -Y
+  brew install java
+  java --version
+  ```
+
 
 ### Executing
 
-_Below is an example of how you can instruct your audience on installing and setting up your app. This template doesn't rely on any external dependencies or services._
+_Below are the instructions on installing and setting up the app. This project does use some external libraries as in the lib folder for automate testing (JUnit) but it is not necessary for executing the application._
 
-1. Get a free API Key at [https://example.com](https://example.com)
+1. Open the terminal on the desired location you want to save the project in your computer
 2. Clone the repo
    ```sh
-   git clone https://github.com/your_username_/Project-Name.git
+   git clone https://github.com/wanghley/routing-service.git
    ```
-3. Install NPM packages
-   ```sh
-   npm install
+3. Install prerequisites as instructed above
+
+4. with your terminal, go to the root folder of the project
+5. Run the demo
+ ```sh
+   cd src/
+   javac -d .. GraphDemo.java
+   cd ..
+   java GraphDemo
    ```
-4. Enter your API in `config.js`
-   ```js
-   const API_KEY = 'ENTER YOUR API';
-   ```
+6. Add the information as required on the terminal
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -129,11 +140,20 @@ _Below is an example of how you can instruct your audience on installing and set
 
 ## Usage
 
-Use this space to show useful examples of how a project can be used. Additional screenshots, code examples and demos work well in this space. You may also link to more resources.
+This project can be used to show applications of graph algorithms and, specifically, how to use Dijkstra;s algorithm in the real world scenario.
 
-_For more examples, please refer to the [Documentation](https://example.com)_
+The current demo uses the terminal to insert the information from the start point and destination with a path being draw in a GUI automatically opened. For example, a path from Durham NC to San Francisco CA can be represented by the screenshot below.
+<div align="center">
+<a href="https://github.com/wanghley/routing-system">
+    <img src="images/result.png" alt="Logo" height="500">
+  </a>
+</div>
 
-<p align="right">(<a href="#readme-top">back to top</a>)</p> -->
+This application can also be used to simulate any other scenario in which a shortest path is needed. For communication purposes, traveling, and any other scenario. A full explanation demo can be found on the video below recorded by the authors of this project.
+
+<iframe width="560" height="315" src="https://www.youtube.com/embed/ELbJdmaFDi4" title="YouTube video player" frameborder="0" allowfullscreen></iframe>
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 
 
