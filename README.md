@@ -79,8 +79,6 @@
 <!-- ABOUT THE PROJECT -->
 ## About The Project
 
-[![Product Name Screen Shot][product-screenshot]](https://github.com/Wanghley/routing-service)
-
 Understanding how people use and interact with space is essential when building a system to calculate routes and distances in a plane (or geoide in the case of Earth). Such sensations are typically subjective, making it challenging to accurately recreate them in a computer. However, by focusing on a smaller portion of the issue, we may develop approaches for gauging particular elements of a routing system. We may use a field of mathematics called graph theory, which is based on a data structure called a graph, to calculate these sorts of metrics.
 
 If we visualize our geographical data as a graph, we may use a variety of existing algorithms designed to address certain queries about such structures. The shortest path may be quickly determined using Dijkstra's Algorithm, for instance, if we want to know the distance between two locations in a space. All potential pathways can be represented as a graph of nodes and edges.
